@@ -89,36 +89,8 @@ img{ vertical-align: top; }
 .map-txt-wrap .map_txt-block{ pointer-events: auto; }
 
 
-/* .section-next-fashion{ height: 100vh; } */
-/* .next-fashion{ height: 100vh; padding: 0;} */
-/* .next-fashion{ height: 100vh; padding-top: 75%;} */
 
-/* .section-supporters{
-    padding: 0;
-}
-.supporters-inner{
-    padding: 100px 0;
-    background: white;
-}
-
-.section-contact{
-    padding-bottom: 200px;;
-}
-
-.support-wrap{
-    align-items: flex-start !important;
-}
-
-.section-header{
-    position: fixed;
-    left: 0; right: 0; top: 0; bottom: 0;
-} */
-
-.apply-txt{ width: 100%; }
-.lyb_yourbrand, .lyb_brand{ overflow: hidden;}
-
-
-
+/* For loading */
 .gnb-wrap .page-padding{ 
     transform: translate3d(0,-100px,0);
     transition: transform 1.5s cubic-bezier(0.5,0,0,1);
@@ -140,9 +112,7 @@ img{ vertical-align: top; }
     transition: transform 1.5s cubic-bezier(0.5,0,0,1);
 }
 
-body.before-load {
-    overflow: hidden;
-}
+body.before-load { overflow: hidden; }
 
 .load-wrap {
     position: absolute;
@@ -162,3 +132,19 @@ body.loaded .gnb-wrap .page-padding{ transform: translate3d(0,0,0); }
 body.loaded .gnb-wrap .float-download{ transform: translate3d(0, 0, 0); }
 body.loaded .h1-title{ transform: translate3d(0, 0, 0); }
 body.loaded .title-desc-wrap{ opacity: 1; }
+
+/* 상세 */
+.winner_rich { word-break: keep-all; }
+.winner_pan{
+    max-height:1140px;
+    height: calc(100vh - 110px);
+}
+.winner_g-arr{
+    pointer-events: none;
+}
+.winner_g-arr > div{
+    pointer-events: auto;
+}
+.btn_g-l, .btn_g-r{
+    cursor: pointer;
+}

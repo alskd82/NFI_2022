@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "gsap": "file:gsap-bonus.tgz",
+    "imagesloaded": "^4.1.4",
     "lottie-web": "^5.8.1"
   }
 }

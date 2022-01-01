@@ -43,9 +43,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
         imgTime: 4,
     })
 
+    /* 랜딩 애니메이션 */
     let imgCount = 0;
     billboard.opts.imgSrc.forEach((imgSrc, i)=>{
-        console.log(imgSrc)
         const img = new Image();
         img.src = imgSrc;
         img.onload =()=> {
@@ -126,7 +126,7 @@ function addEvent(){
 }
 
 const firstFocus=(elem)=> gsap.to(window, 0, { scrollTo: elem });
-// firstFocus(".section-next-fashion")
+// firstFocus("#SectionWinner")
 
 
 /* ====================================================================================================================*/
@@ -186,6 +186,8 @@ const GNB = function(){
 
 
 function gnbShowHide_Fn( state ){       /* gnb 등장-숨기기 */
+    if( document.querySelector('.winner_page') ) return;
+    if( document.body.style.position === 'fixed' ) return
     const _y = (state === 'show') ? 0 : -gsap.getProperty('.gnb-wrap', 'height');
     document.querySelector('.gnb-wrap').setAttribute('data-state', state)
     gsap.to('.gnb-wrap .navi', .6, {ease: "Quint.easeOut", y: _y})
@@ -784,3 +786,26 @@ const Section_Supporters = function(){
 
 }
 
+
+/* ====================================================================================================================*/
+// /* 상세 불러오기 */
+
+import ShowDetail from "./_showDetail.js"
+
+let detailContent = new ShowDetail();
+
+document.querySelectorAll('.winner-link').forEach((winner, i)=>{
+    winner.addEventListener('click', showDetailPage_Fn, false);
+});
+
+function showDetailPage_Fn(e){
+    e.preventDefault();
+    // const URL = e.currentTarget.getAttribute('href');
+    const URL = 'winner/nisi-dolores-quam-velit/'
+    detailContent.bodyBlock(true, window.pageYOffset);
+    detailContent.fetchPage( URL );
+    
+}
+// function goToDeatil_Fn(e){
+
+// }
