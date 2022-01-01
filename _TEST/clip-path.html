@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> clip-path</title>
+    <style>
+        body{
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mask{ 
+            width: 500px; height: 500px; background-color: wheat; overflow: hidden;
+        }
+        .img{
+            width: 100%; height: 100%;            
+            background-size: cover;
+            background-color: blue;
+            /* background: no-repeat center url('img_pc_benefit.jpg'); */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mask">
+        <div class="img"></div>
+    </div>
+
+    <script src="https://static.msscdn.net/webflow/static/libs/gsap/gsap.min.js"></script>
+    <script>
+        gsap.set(".mask", {clipPath: 'polygon(33% 23%, 55% 27%, 50% 63%, 31% 68%)'})
+        gsap.to(".mask",1, {clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)'})
+    </script>
+    
+</body>
+</html>
