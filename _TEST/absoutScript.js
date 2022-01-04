@@ -8,7 +8,7 @@
 */
 
 
-const t = "외부변수"
+// const t = "외부변수"
 
 // let A = (function( exports ) {
 //     console.log('즉시실행')
@@ -36,50 +36,69 @@ const t = "외부변수"
 
 
 
-console.log( A._name )
-A.func()
-A._name = '유정선';         // 변수를 exports 시켜도 외부에서 직접 접근해서 변경이 안됨!!
-console.log( A._name )      // 변경된 값으로 호출되지만 A 안에 있는 함수들이 쓰는 변수는 변경되지 않았음.
-A.func()                    // 변경된 값으로 호출되지만 A 안에 있는 함수들이 쓰는 변수는 변경되지 않았음.
+// console.log( A._name )
+// A.func()
+// A._name = '유정선';         // 변수를 exports 시켜도 외부에서 직접 접근해서 변경이 안됨!!
+// console.log( A._name )      // 변경된 값으로 호출되지만 A 안에 있는 함수들이 쓰는 변수는 변경되지 않았음.
+// A.func()                    // 변경된 값으로 호출되지만 A 안에 있는 함수들이 쓰는 변수는 변경되지 않았음.
 
-A.setName('유정선');        // 변수를 변경하는 함수를 만들어서 변경시켜줘야 함.
-A.func()
-
-
+// A.setName('유정선');        // 변수를 변경하는 함수를 만들어서 변경시켜줘야 함.
+// A.func()
 
 
-// let B = {
-//     _name: '김아무개',
-//     init : (function(){
-//         /* _name 접근이 안된다 */
-//         console.log('즉시실행' )
-//     })(),
-
-//     get name() {
-//         return this._name;
-//     },
-
-//     set name(value) {
-//         // if (value.length < 4) {
-//         //     console.log('더 길게...')
-//         //     return;
-//         // }
-//         this._name = value;
-//     },
-
-//     func: function(){
-//         console.log(this._name + "입니다")
-//         //return this._name;
-//     }
-// }
-
-// B.func()
-// B.name = "유정선"
-// B.func()
 
 
-// const c = function(){
-//     console.log('c')
-// }
+let B = {
+    _name: '김아무개',
+    init : (function(){
+        /* _name 접근이 안된다 */
+        console.log('즉시실행' )
+    })(),
 
-// const d = () => console.log('d')
+    get name() {
+        return this._name;
+    },
+
+    set name(value) {
+        // if (value.length < 4) {
+        //     console.log('더 길게...')
+        //     return;
+        // }
+        this._name = value;
+    },
+
+    func: function(){
+        console.log(this._name + "입니다")
+        //return this._name;
+    }
+}
+
+B.func()
+B.name = "유정선"
+B.func()
+
+
+const c = (function(exports){
+    
+    function init(){
+        console.log('ok')
+    }
+    exports = {
+        init
+    }
+    return exports;
+})({})
+
+// c.init()
+
+
+let tl = gsap.timeline({paused: true});
+tl.to('.box', .5, {x: 100 })
+tl.to('.box', .5, {y: 100 , onComplete:()=>{
+    // tl.seek(0)
+    tl.pause(0)
+}})
+
+setTimeout(()=>{
+    tl.play()
+}, 1000)
