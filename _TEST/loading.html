@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> loading </title>
+    <link href="https://uploads-ssl.webflow.com/616e2bb0893fb3c0e9866cf3/css/nfi.webflow.d5724bf32.css" rel="stylesheet" type="text/css" />
+    <style>
+        body.before-load #LoadWrap{
+            position: fixed; 
+            left: 0; right: 0; top: 0; bottom: 0;
+            z-index: 1000;
+            background-color: #2e2e2e;
+            height: 100vh;
+            white-space: nowrap;
+        }
+        #LoadWrap .load-text{
+            display: 'block';
+            font-family: Musinsaot, sans-serif;
+            line-height: 1;
+            color: #fff; text-align: center;
+            position: absolute; left: 50%; top: 50%;
+            transform: translate(-50%, -50%);
+            overflow: hidden;
+        }
+        #LoadWrap .load-text.big{font-size: 75px; opacity: 0;}
+        #LoadWrap .load-text.small{font-size: 50px; }
+        #LoadWrap span{ color: #BDFF00; display: inline-block;}
+
+        #LoadWrap .load-text.small.load span:nth-child(1){ animation: ani_load_text 1.5s ease 0s infinite; }
+        #LoadWrap .load-text.small.load span:nth-child(2){ animation: ani_load_text 1.5s ease 0.15s infinite; }
+        #LoadWrap .load-text.small.load span:nth-child(3){ animation: ani_load_text 1.5s ease 0.3s infinite; }
+        @keyframes ani_load_text {
+            0%{ opacity: 1;}
+            50%{ opacity: 0;}
+            100%{ opacity: 1;}
+        }
+
+        #LoadWrap .overlay {
+            grid-area: 1 / 1 / 2 / 2;
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+        }
+
+    </style>
+</head>
+<body class="before-load">
+
+    <section id="LoadWrap">
+        <div class="load-text big"> 
+            <div> <span>N</span>ext <span>F</span>ashion <span>I</span>ncubator </div> 
+        </div>
+        <div class="load-text small load"> 
+            <div> <span>N</span>ext <span>F</span>ashion <span>I</span>ncubator </div> 
+        </div>
+        <svg class="overlay" width="100%" height="100%" fill="#BDFF00" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path class="overlay_path" vector-effect="non-scaling-stroke" d="M 0 100 V 100 Q 50 100 100 100 V 100 z" />
+        </svg>
+    </section>
+
+    
+
+    <script src="https://static.msscdn.net/webflow/static/libs/bezierEasing.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.8.1/lottie_svg.min.js"></script>
+    <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+    <script src="https://static.msscdn.net/webflow/static/libs/gsap/gsap.min.js"></script>
+    <script src="https://static.msscdn.net/webflow/static/libs/gsap/ScrollTrigger.min.js"></script>
+    <script src="https://static.msscdn.net/webflow/static/libs/gsap/ScrollToPlugin.min.js"></script>
+    <script src="https://static.msscdn.net/webflow/static/libs/gsap/SplitText.min.js"></script>
+
+<script>
+
+class Loading {
+    constructor(opts){
+        this.opts = {...opts}
+        this.elem = document.querySelector(opts.elem);
+        this.spanBig = this.elem.querySelector('.load-text.big div');
+        this.spanSmall = this.elem.querySelector('.load-text.small div');
+        this.overlayPath = this.elem.querySelector('.overlay_path')
+
+        gsap.set(this.spanBig, {y: 75} )
+        gsap.set(this.spanBig.querySelectorAll('span'), {y: -150} )
+        gsap.set(this.spanBig.parentElement, {opacity: 1})
+        gsap.set(this.elem, {clipPath: '0% 0%, 100% 0%, 100% 100%, 0% 100%'})
+    }
+
+    play(){
+        const span = this.spanSmall.querySelectorAll('span');
+        span.forEach(elem => {
+            elem.classList.remove('load')
+            elem.style.animation = 'ani'
+        });
+        gsap.to(this.spanSmall, this.opts.time, {y: -50, ease: this.opts.easing})
+        gsap.to(span, this.opts.time, {y: 100, ease: this.opts.easing});
+        gsap.to(this.spanBig, this.opts.time, {delay: this.opts.timeDelay, y: 0, ease: this.opts.easing} )
+        gsap.to(this.spanBig.querySelectorAll('span'), this.opts.time, {delay: this.opts.timeDelay, y: 0, ease: this.opts.easing } )
+        gsap.delayedCall(0.3, this.open.bind(this) )
+        
+    }
+    open(){
+        gsap.timeline()
+            .set(this.overlayPath, { attr: { d: 'M 0 100 V 100 Q 50 100 100 100 V 100 z' } })
+            .to(this.overlayPath, 0.6, { ease: 'Quint.easeIn', attr: { d: 'M 0 100 V 50 Q 50 0 100 50 V 100 z' } }, 0)
+            .to(this.overlayPath, 0.3, {  ease: 'Cubic.easeOut', attr: { d: 'M 0 100 V 0 Q 50 0 100 0 V 100 z' },
+                onComplete: () => {
+                    this.elem.style.backgroundColor = 'rgba(0,0,0,0)';
+                    this.elem.querySelectorAll('div').forEach(elem => elem.remove());
+                }
+            })
+            .set(this.overlayPath, { attr: { d: 'M 0 0 V 100 Q 50 100 100 100 V 0 z' } })
+            .to(this.overlayPath, 0.3 ,{ ease: 'Cubic.easeIn',  attr: { d: 'M 0 0 V 50 Q 50 0 100 50 V 0 z' } })
+            .to(this.overlayPath, 0.8, {  ease: 'Quint.easeOut', attr: { d: 'M 0 0 V 0 Q 50 0 100 0 V 0 z' }, 
+            onComplete: () => {
+                    this.elem.remove()
+                }    
+        });
+    }
+}
+
+
+const loading = new Loading({
+    elem: '#LoadWrap',
+    easing: 'Quint.easeOut',
+    time: .6,
+    timeDelay: 0.1,
+})
+
+
+document.body.addEventListener('click', ()=>{ loading.play()  });
+    
+</script>
+    
+</body>
+</html>

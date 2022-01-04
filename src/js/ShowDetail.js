@@ -1,7 +1,6 @@
 import {gsap} from 'gsap';
 import imagesLoaded from 'imagesloaded';
 
-
 class ShowDetail{
     constructor( opts ){
         const defaults = {

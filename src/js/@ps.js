@@ -1,18 +1,25 @@
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import { SplitText } from "gsap/SplitText";
+// import { gsap } from "gsap";
+// import { ScrollTrigger } from "gsap/ScrollTrigger";
+// import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+// import { SplitText } from "gsap/SplitText";
 
-import lottie from 'lottie-web';
-import lottiePath from './section-desc_text.json';
+// import imagesLoaded from "imagesloaded";
 
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText);
+// import lottie from 'lottie-web';
+// import lottiePath from './section-desc_text.json';
+
+// import BezierEasing from './_BezierEasing.js'
+// import ShowDetail from "./_ShowDetail.js"
+
+// gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText);
 
 /* ---------------- */
 
 const gnbWrap = document.querySelector('.gnb-wrap');
 const floatingDownload = document.querySelector('.float-download');
-let billboard 
+let billboard;
+let loading;
+let detailContent;
 
 document.addEventListener('DOMContentLoaded', ()=>{
     addEvent();
@@ -33,36 +40,46 @@ document.addEventListener('DOMContentLoaded', ()=>{
         elem: '.billboard',
         imgElem: '.billboard-img',
         imgWrap: '.billboard-img-wrap',
-        imgSrc: [
-            "https://uploads-ssl.webflow.com/616e2bb0893fb3c0e9866cf3/61c556e852103b255a5398af_img_pc_bil01.jpg",
-            "https://uploads-ssl.webflow.com/616e2bb0893fb3c0e9866cf3/61c556e8ff1fed575f524916_img_pc_bil02.jpg",
-            "https://uploads-ssl.webflow.com/616e2bb0893fb3c0e9866cf3/61c556e99385b1604532697f_img_pc_bil03.jpg"
-        ],
         imgScale: 1.1,
         overlayTime: 1,
         imgTime: 4,
+    });
+    /* 로딩 애니메이션 */
+    loading = new Loading({
+        elem: '#LoadWrap',
+        easing: 'Quint.easeOut',
+        time: .6,
+        timeDelay: 0.1,
     })
 
     /* 랜딩 애니메이션 */
     let imgCount = 0;
-    billboard.opts.imgSrc.forEach((imgSrc, i)=>{
-        const img = new Image();
-        img.src = imgSrc;
-        img.onload =()=> {
-            imgCount++;
-            if(imgCount === billboard.opts.imgSrc.length){
-                document.body.classList.add('loaded');
-                billboard.play()
-            }
+    let imgLoad = imagesLoaded('.billboard',{background: '.billboard-img'} );
+
+    imgLoad.on( 'progress', function(instance, image) {
+        let result = image.isLoaded ? 'loaded' : 'broken';
+        console.log( 'image is ' + result + ' for ' + image.img.src );
+        imgCount++
+        if(imgCount === imgLoad.images.length){
+            console.log('billboard images loaded')
+            gsap.delayedCall(1, landing);
         }
-    })
+    });
+    
+
+    function landing(){
+        loading.play()
+        setTimeout(() => {
+            document.body.classList.add('loaded');
+            billboard.play();
+        }, 1000);
+    }
     // billboard.play()
+
+    /*  상세 */
+    detailContent = new ShowDetail();
 })
 
-// window.addEventListener('load', ()=>{
-//     document.body.classList.add('loaded');
-//     billboard.play()
-// })
 
 function addEvent(){
     floatingDownload.addEventListener('mouseenter', floatingDownload_Fn, false);
@@ -123,10 +140,65 @@ function addEvent(){
 
     /* 로고 이동 */
     document.querySelector('.logo-wrap').addEventListener('click', e => window.open('about:blank').location.href = "https://www.musinsapartners.co.kr/" )
+
+    /* 상세 불러오기 */
+    document.querySelectorAll('.winner-link').forEach((winner, i)=>{
+        winner.addEventListener('click', showDetailPage_Fn, false);
+    });
+    
 }
 
 const firstFocus=(elem)=> gsap.to(window, 0, { scrollTo: elem });
 // firstFocus("#SectionWinner")
+
+/* ====================================================================================================================*/
+/* Loading */
+class Loading {
+    constructor(opts){
+        this.opts = {...opts}
+        this.elem = document.querySelector(opts.elem);
+        this.spanBig = this.elem.querySelector('.load-text.big div');
+        this.spanSmall = this.elem.querySelector('.load-text.small div');
+        this.overlayPath = this.elem.querySelector('.overlay_path')
+
+        gsap.set(this.spanBig, {y: 75} )
+        gsap.set(this.spanBig.querySelectorAll('span'), {y: -150} )
+        gsap.set(this.spanBig.parentElement, {opacity: 1})
+        gsap.set(this.elem, {clipPath: '0% 0%, 100% 0%, 100% 100%, 0% 100%'})
+    }
+
+    play(){
+        const span = this.spanSmall.querySelectorAll('span');
+        span.forEach(elem => {
+            elem.classList.remove('load')
+            elem.style.animation = 'ani'
+        });
+        gsap.to(this.spanSmall, this.opts.time, {y: -50, ease: this.opts.easing})
+        gsap.to(span, this.opts.time, {y: 100, ease: this.opts.easing});
+        gsap.to(this.spanBig, this.opts.time, {delay: this.opts.timeDelay, y: 0, ease: this.opts.easing} )
+        gsap.to(this.spanBig.querySelectorAll('span'), this.opts.time, {delay: this.opts.timeDelay, y: 0, ease: this.opts.easing } )
+        gsap.delayedCall(0.3, this.open.bind(this) )
+        
+    }
+    open(){
+        gsap.timeline()
+            .set(this.overlayPath, { attr: { d: 'M 0 100 V 100 Q 50 100 100 100 V 100 z' } })
+            .to(this.overlayPath, 0.6, { ease: 'Quint.easeIn', attr: { d: 'M 0 100 V 50 Q 50 0 100 50 V 100 z' } }, 0)
+            .to(this.overlayPath, 0.3, {  ease: 'Cubic.easeOut', attr: { d: 'M 0 100 V 0 Q 50 0 100 0 V 100 z' },
+                onComplete: () => {
+                    this.elem.style.backgroundColor = 'rgba(0,0,0,0)';
+                    this.elem.querySelectorAll('div').forEach(elem => elem.remove());
+                }
+            })
+            .set(this.overlayPath, { attr: { d: 'M 0 0 V 100 Q 50 100 100 100 V 0 z' } })
+            .to(this.overlayPath, 0.3 ,{ ease: 'Cubic.easeIn',  attr: { d: 'M 0 0 V 50 Q 50 0 100 50 V 0 z' } })
+            .to(this.overlayPath, 0.8, {  ease: 'Quint.easeOut', attr: { d: 'M 0 0 V 0 Q 50 0 100 0 V 0 z' }, 
+            onComplete: () => {
+                    this.elem.remove()
+                }    
+        });
+    }
+}
 
 
 /* ====================================================================================================================*/
@@ -261,7 +333,7 @@ function floatingDownload_Fn(e){
 
 class Billboard {
     constructor( opts ){
-        if(opts.imgSrc === undefined) return;
+        if(opts.imgElem === undefined) return;
         const defaults = {
             imgScale: 1.1,
             overlayTime: 1,
@@ -272,7 +344,6 @@ class Billboard {
         this.imgWrapArr = document.querySelectorAll(opts.imgWrap)
 
         this.index = 0;
-        // this.isPlay = false;
         this._set();
         //this.play();
     }
@@ -285,8 +356,6 @@ class Billboard {
 
         this.gsapArr = [];
         this.imgArr.forEach((item,i)=>{
-            item.style.backgroundImage = `url(${this.opts.imgSrc[i]})`
-
             const tl = gsap.timeline({paused: true});
             tl.fromTo(this.imgWrapArr[i], {
                 opacity: 0,
@@ -343,10 +412,8 @@ class Billboard {
 } 
 
 
-
 /* ====================================================================================================================*/
 /* ClipMaskImg*/
-
 class ClipMaskImg {
     constructor( opts ){
         const defaults = {
@@ -482,8 +549,8 @@ const Section_Desc = function(){
     document.querySelector('.desc_info-txt').innerHTML += `<div id="textMasking"></div>`;
     const textMasking = lottie.loadAnimation({
         container: document.querySelector('#textMasking'),
-        // path: 'https://static.msscdn.net/webflow/static/partners/section-desc_text.json',
-        animationData: JSON.parse( JSON.stringify(lottiePath)),
+        path: 'https://static.msscdn.net/webflow/static/partners/section-desc_text.json',
+        // animationData: JSON.parse( JSON.stringify(lottiePath)),
         autoplay: false, loop: false
     })
     //------------------------------------------------------------------------------------------
@@ -500,10 +567,6 @@ const Section_Desc = function(){
     const showTxt_tl = gsap.timeline()
     showTxt_tl.to('.section-desc .desc_info-txt_p', 1.0, { y: 0, stagger: 0.1, ease: "Quint.easeOut"})
     showTxt_tl.to('.section-desc .desc_info-txt_p', .5, { autoAlpha: 1, stagger: 0.1 , ease: "none"}, 0)
-    // showTxt.to( _before, 0.5, { cssRule:{ width: '315px'}, ease: BezierEasing(0.4,0,0.2,1) , onComletet:()=>{
-    //     document.querySelector('.section-desc .desc_info-txt_strong').style.color = "#BDFF00";
-    // }},  "=-0.8")
-    // showTxt.to( _before, 0.3, { cssRule:{ x: 317px}, ease: BezierEasing(0.8,0,0.66,1) } )
 
     ScrollTrigger.create({
         // markers: true, 
@@ -517,11 +580,7 @@ const Section_Desc = function(){
                     document.querySelector('.section-desc .desc_info-txt_strong').style.color = "#BDFF00"; 
                 },500)
             }, 600)
-        },
-        // onLeaveBack:()=>{
-        //     textMasking.goToAndStop(1, false)
-        //     document.querySelector('.section-desc .desc_info-txt_strong').style.color = "#fff";
-        // }
+        }
     })
 }
 
@@ -790,22 +849,140 @@ const Section_Supporters = function(){
 /* ====================================================================================================================*/
 // /* 상세 불러오기 */
 
-import ShowDetail from "./_showDetail.js"
+class ShowDetail{
+    constructor( opts ){
+        const defaults = {
+        }
+        this.opts = {...defaults, ...opts};  
+        this.bodyScrollY
 
-let detailContent = new ShowDetail();
+        this.pageElem;
+        this.dimElem;
+        this.contenteElem;
+        this.galleryFocusIndex;
+    }
 
-document.querySelectorAll('.winner-link').forEach((winner, i)=>{
-    winner.addEventListener('click', showDetailPage_Fn, false);
-});
+    fetchPage(src){
+        const response = fetch(src).then((response)=>{
+            return response.text()
+        }).then((html)=>{
+            const parser = new DOMParser();
+            const doc = this.doc = parser.parseFromString(html, 'text/html');
+
+            // console.log(doc)
+            this.pageElem = doc.querySelector('.winner_page');
+            
+            this.dimElem = doc.querySelector('.winner_page .winner_page-dim');
+            this.closeElem = doc.querySelector('.winner_page .ic_close');
+
+            this.panElem = doc.querySelectorAll('.winner_page .winner_pan');
+
+            this.galleryFocusIndex = 0
+
+            gsap.set( [this.dimElem,this.closeElem], {opacity: 0} );
+            gsap.set( this.panElem, { clipPath: 'polygon(0% 50%, 100% 50%, 100% 50%, 0% 50%)' })
+            // gsap.set( this.panElem, { clipPath: `polygon(0% 50%, 100% 50%, 100% 50.5%, 0% 50.5%)`});
+
+            document.body.appendChild( this.pageElem )
+            this.loadImage()
+            this.addEvent();            
+        })
+    }
+
+    addEvent(){
+        this.closeElem.addEventListener('click', this.close.bind(this), false);
+        this.dimElem.addEventListener('click', this.close.bind(this), false);
+        
+        if(this.pageElem.querySelector('.btn_g-l')){
+            this.arrL = this.pageElem.querySelector('.btn_g-l');
+            this.arrR = this.pageElem.querySelector('.btn_g-r');
+            this.imgTotalNum = this.pageElem.querySelectorAll('.winner_g-item').length
+            if( this.imgTotalNum > 4){
+                this.arrL.addEventListener('click', this.arr_Fn.bind(this), false);
+                this.arrR.addEventListener('click', this.arr_Fn.bind(this), false);
+                gsap.set( this.arrL, {autoAlpha: 0})
+            } else {
+                this.pageElem.querySelector('.winner_g-arr').remove()
+            }
+        }
+    }
+    removeEvent(){
+        this.dimElem.removeEventListener('click', this.close.bind(this), false)
+        this.closeElem.removeEventListener('click', this.close.bind(this), false)
+    }
+
+    loadImage(){
+        gsap.to( this.dimElem, .2, {opacity: 1, ease: 'quint.easeOut'} );
+        this.pageElem.querySelector('.winner_container').style.pointerEvents = 'none';
+
+        const imgLoad = imagesLoaded( this.pageElem, { background: '.winner_g-thumb' });
+        let imgCount = 0
+        let percent;
+        imgLoad.on('progress', function(instance, image){
+            imgCount++;
+            percent = imgCount / (imgLoad.images.length-1) * 100;
+            gsap.set( this.panElem, { 
+                clipPath: `polygon(${50-(percent/2)}% 50%, ${50+(percent/2)}% 50%, ${50+(percent/2)}% 50.05%, ${50-(percent/2)}% 50.05%)`,
+            });
+
+            if(imgCount === imgLoad.images.length){
+                console.log('detailContent images loaded')
+                this.open()
+            }
+        })
+    }
+
+    bodyBlock( isBlock, scrollY ){
+        if(isBlock){
+            this.bodyScrollY = scrollY;
+            document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.width = "100%";
+        } else {
+            document.body.style.removeProperty('overflow');
+            document.body.style.removeProperty('position');
+            document.body.style.removeProperty('top');
+            window.scrollTo(0, this.bodyScrollY);
+        }
+    }
+
+    open(){
+        this.pageElem.querySelector('.winner_container').style.pointerEvents = 'auto'
+        gsap.to( this.closeElem, .2, {opacity: 1, ease: 'quint.easeOut'} );
+        gsap.to( this.panElem, .6, { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', ease: BezierEasing(0.8,0,0,1)})
+    }
+
+    close(e){
+        this.bodyBlock(false);
+        gsap.to( this.pageElem, .2, {autoAlpha: 0, ease: 'quint.easeOut', 
+            onComplete:()=> {
+                document.body.removeChild( this.pageElem )
+                this.removeEvent()
+            }
+        });
+    }
+
+    arr_Fn(e){
+        (e.currentTarget === this.arrR) ? this.galleryFocusIndex++ : this.galleryFocusIndex--
+        if( this.galleryFocusIndex < 0 ) this.galleryFocusIndex = 0
+        if( this.galleryFocusIndex > this.imgTotalNum - 4 ) this.galleryFocusIndex = this.imgTotalNum - 4
+        
+        const r = (this.galleryFocusIndex == this.imgTotalNum - 4) ? 0 : 1
+        const l = (this.galleryFocusIndex == 0 ) ? 0 : 1
+        gsap.set(this.arrR, {autoAlpha: r})
+        gsap.set(this.arrL, {autoAlpha: l})
+
+        gsap.to( '.winner_g-list', .5, {x: -this.galleryFocusIndex * (260+3), ease: 'Quint.easeOut'})
+    }
+}
 
 function showDetailPage_Fn(e){
     e.preventDefault();
     // const URL = e.currentTarget.getAttribute('href');
-    const URL = 'winner/nisi-dolores-quam-velit/'
-    detailContent.bodyBlock(true, window.pageYOffset);
-    detailContent.fetchPage( URL );
+    // console.log(URL)
+    // const URL = 'winner/'
+    // detailContent.bodyBlock(true, window.pageYOffset);
+    // detailContent.fetchPage( URL );
     
 }
-// function goToDeatil_Fn(e){
-
-// }

@@ -13,11 +13,11 @@ module.exports = {
 	mode: webpackMode,
 	entry: {
         // common: ['./src/a.js', './src/b.js'], // 여러개 합치기
-		pc: './src/js/pc.js',         // 빌드 파일 //
+		pc: './src/js/index_pc.js',         // 빌드 파일 //
 	},
 	output: {
 		path: path.resolve('./dist'), // 빌드 완료 위치 //
-		filename: '[name].js?[chunkhash]'
+		filename: '[name]_bundle.js?[chunkhash]'
 	},
 	devServer: {
 		static: './src', hot: true,         
@@ -33,7 +33,8 @@ module.exports = {
 			})
 		] : [],
 		splitChunks: {
-			chunks: 'all'
+			chunks: 'all',
+			usedExports: true,
 		}
 	},
 	module: {
