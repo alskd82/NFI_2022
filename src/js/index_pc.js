@@ -957,8 +957,8 @@ const Section_Supporters = function(){
 // /* 상세 페이지 */
 function showDetailPage_Fn(e){
     e.preventDefault();
-    // const URL = e.currentTarget.getAttribute('href');
-    const URL = 'winner/'
+    const URL = e.currentTarget.getAttribute('href');
+    // const URL = 'winner/'
     detailContent.bodyBlock(true, window.pageYOffset);
     detailContent.fetchPage( URL );
 }
