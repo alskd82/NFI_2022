@@ -1,0 +1,52 @@
+:root{ --vh: 1vh;}
+
+a { color: inherit; }
+img { vertical-align: top; }
+.hide { display: none !important; }
+.is-keep-all { word-break: keep-all; }
+
+
+.m_float-wrap { pointer-events: none; }
+.m_float-wrap .m_float-download { pointer-events: auto; }
+
+/* tittle */
+.m_section-title{
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+}
+
+/* 정보제공 ul 리스트 dot */
+.m_info-txt_list_item::before {
+    content: '';
+    background-color: white;
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    margin-top: 8px;
+    display: inline-block;
+    margin-right: 15px;
+}
+
+.m_info-txt_list_item.is-black::before {
+    content: '';
+    background-color: black;
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    margin-top: 8px;
+    display: inline-block;
+    margin-right: 15px;
+}
+
+/* ------------------ */
+/* 사용자 임의 변경 불가 */
+.noresize { resize: none; }
+
+/* 지도 */
+.m_map-txt-wrap { pointer-events: none; }
+
+.m_map-txt-wrap .m_map_txt-block {
+    pointer-events: auto;
+    width: calc(100% - 80px);
+}
+
