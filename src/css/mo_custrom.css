@@ -43,10 +43,48 @@ img { vertical-align: top; }
 .noresize { resize: none; }
 
 /* 지도 */
-.m_map-txt-wrap { pointer-events: none; }
-
+/* .m_map-txt-wrap { pointer-events: none; } */
 .m_map-txt-wrap .m_map_txt-block {
     pointer-events: auto;
     width: calc(100% - 80px);
 }
+
+
+/* ------------------ */
+/* ----gnb------- */
+.m_gnb-wrap {height: 66px; }
+.m_gnb-wrap.bg-black{ background-color: black; }
+.m_navi-list{ transition: 300ms cubic-bezier(0.6,0,1,1); }
+.m_navi-list.show{
+    transform: translate3d(0,0,0);
+    transition: 400ms cubic-bezier(0.33,0.45,0,1);
+}
+
+/* ------------------ */
+/* ----senction_desc------- */
+/* .m_desc_txt-wrap .m_desc_txt-t{ transform: translate3d(0,95%,0);} /* 처음 아래로. 숨기기*/
+.m_desc_txt-wrap.show .desc_txt .m_desc_txt-t{ transform: translate3d(0,0,0); transition: 1s cubic-bezier(0.22, 1, 0.36, 1); }
+.m_desc_txt-wrap.show .desc_txt:nth-child(1) .m_desc_txt-t{ transition-delay: 0s;}
+.m_desc_txt-wrap.show .desc_txt:nth-child(2) .m_desc_txt-t{ transition-delay: 0.1s;}
+.m_desc_txt-wrap.show .desc_txt:nth-child(3) .m_desc_txt-t{ transition-delay: 0.2s;}
+.m_desc_txt-wrap.show .desc_txt:nth-child(4) .m_desc_txt-t{ transition-delay: 0.3s;}
+
+
+/* .m_desc_info-wrap p{ opacity: 0; transform: translate3d(0,40px,0); } /* 처음 아래로. 숨기기*/
+.m_desc_info-wrap.show p{ 
+    opacity: 1; transform: translate3d(0,0,0); 
+    transition: transform .8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease; 
+}
+.m_desc_info-wrap.show p:nth-child(1){ transition-delay: 0s;}
+.m_desc_info-wrap.show p:nth-child(2){ transition-delay: 0.1s;}
+.m_desc_info-wrap.show p:nth-child(3){ transition-delay: 0.2s;}
+.m_desc_info-wrap.show p:nth-child(4){ transition-delay: 0.3s;}
+.m_desc_info-wrap.show p:nth-child(5){ transition-delay: 0.4s;}
+.m_desc_info-wrap.show p:nth-child(6){ transition-delay: 0.5s;}
+
+#textMasking{
+    position: absolute; left: 40px; top: 29px;
+    width: 210px; height: 36px; z-index: 2; 
+}
+
 
