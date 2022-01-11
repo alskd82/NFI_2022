@@ -90,7 +90,6 @@ window.addEventListener('load', ()=>{
     Section_Apply.init();
     Section_LYB.init();
     Section_Next.init();
-
 })
 
 
@@ -109,7 +108,7 @@ function addEvent(){
     /* 이메일 바로가기 */
     document.querySelector('.txt_email-underline').addEventListener('click', ()=> goToEmail() )
     document.querySelector('.map_txt-item_t3').addEventListener('click', ()=> goToEmail() )
-    const goToEmail =()=> document.location.href = 'mailto:nextfashion@musinsapartners.com';
+    const goToEmail =()=> window.open('about:blank').location.href = 'mailto:nextfashion@musinsapartners.com';
 
     /* 지원서 다운로드 링크 */
     floatingDownload.addEventListener('click', downloadLink, false );
@@ -635,7 +634,6 @@ const Section_Desc = (function(exports){
 /* ====================================================================================================================*/
 // /* APPLAY - ScrollTrigger */
 const Section_Apply = (function(exports){
-    
     let applyClipMaskImg;
     function init(){
         applyClipMaskImg = new ClipMaskImg({

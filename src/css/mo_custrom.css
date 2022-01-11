@@ -1,4 +1,7 @@
-:root{ --vh: 1vh;}
+:root{
+    --vh: 1vh; 
+    --resize_vh: 1resize_vh;
+}
 
 a { color: inherit; }
 img { vertical-align: top; }
@@ -135,6 +138,10 @@ body.loaded .title-desc-wrap {
 
 /* ------------------------ */
 /* ----상세------- */
+.m_detail{ 
+    height: 100resize_vh;
+    height: calc(var(--resize_vh, 1resize_vh) * 100);
+}
 .m_detail-gallery_img:nth-child(1){ margin-left: 20px; }
 .m_detail-gallery_img:last-child{ margin-right: 20px; }
 
@@ -164,7 +171,6 @@ body.loaded .title-desc-wrap {
 
 /* ------------------------ */
 /* ---- LoadWrap ------- */
-
 body.before-load #LoadWrap{
     position: fixed; 
     left: 0; right: 0; top: 0; bottom: 0;
@@ -188,7 +194,10 @@ body.before-load #LoadWrap{
 #LoadWrap .line{
     width: 0%;  height: 2px;
     background-color: #BDFF00;
-    position: absolute; left: 0; bottom: 0; right: 0;
+    position: absolute; left: 0; right: 0;
+    top: calc(100vh - 2px);
+    top: calc(var(--vh, 1vh) * 100 - 2px); 
+    
 }
 
 #LoadWrap .load-text.small.load span:nth-child(1){ animation: ani_load_text 1.5s ease 0s infinite; }
@@ -207,4 +216,14 @@ body.before-load #LoadWrap{
     pointer-events: none;
     width: 100%;
     height: 100%;
+}
+
+/* ------------------------ */
+/* ---- scroll down ---------- */
+.scroll-arrow-wrap svg{
+    animation: down-arrow .5s cubic-bezier(0.4, 0, 0.2, 1) alternate infinite;
+}
+@keyframes down-arrow {
+    0%{ transform: translate3d(0,1.5px,0);}
+    100%{ transform: translate3d(0,-2.5px,0);}
 }

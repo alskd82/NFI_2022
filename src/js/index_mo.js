@@ -5,7 +5,7 @@ function print( _print ){
             .print{
                 position:fixed; left:0; right:0; bottom: 0; top: 0; 
                 pointer-events:none; 
-                z-index: 1000;
+                z-index: 1001;
                 font-size: 3rem;
                 color: red;
             }
@@ -59,6 +59,7 @@ const btn_ham = document.querySelector('.m_ham');
 let isRefresh = false;
 let loader;
 let Detail;
+
 
 document.addEventListener('DOMContentLoaded', e =>{
 
@@ -134,9 +135,14 @@ function addEvent(){
     document.querySelectorAll('.winner-link').forEach((link, i)=>{
         link.addEventListener('click', e =>{
             e.preventDefault();
-            // const href = item.getAttribute('href');
-            const href = './winner'
+            let href;
+            if(window.location.href.indexOf("webflow") != -1 || window.location.href.indexOf("nextfashion") != -1){
+                href = item.getAttribute('href');
+            } else {
+                href = './winner'
+            }
             Detail.pageShow(href);
+            // gsap.set('#DetailContent > .m_detail-wrap', {height: window.innerHeight, autoAlpha: 1});
             isGNBShow = true;
             bodyBlock(true);
         })
@@ -145,6 +151,8 @@ function addEvent(){
     /* 상세 닫기 */
     document.querySelector('.m_detail-gnb a').addEventListener('click' , e =>{
         Detail.closePage();
+        isGNBShow = false;
+        bodyBlock(false);
     })
 
 
@@ -395,7 +403,7 @@ const GNB = (function(exports){
                 if( targetSections[i] === ".m_section-supporters") _offset = 20
                 else if( targetSections[i] === ".m_section-benefit") _offset = -20
                 else if( targetSections[i] === ".m_section-winner") _offset = 30
-                gsap.to(window, 0, { scrollTo:{ y: targetSections[i] , offsetY: _offset} });
+                gsap.to(window, 0, { scrollTo:{ y: targetSections[i] , offsetY: _offset-5} });
 
                 
             })
@@ -471,6 +479,7 @@ function scroll_Fn(e){
         }
     };
 
+    // if(document.body.classList.contains('loaded')) print(gsap.getProperty('.m_detail', 'height'))
 }
 
 
@@ -605,8 +614,8 @@ const Section_Desc = (function(exports){
         document.querySelector('.m_desc_info-txt').innerHTML += `<div id="textMasking"></div>`;
         textMasking = lottie.loadAnimation({
             container: document.querySelector('#textMasking'),
-            path: 'https://static.msscdn.net/webflow/static/partners/path/text_masking.json',
-            // animationData: path_textMastking,
+            // path: 'https://static.msscdn.net/webflow/static/partners/path/text_masking.json',
+            animationData: path_textMastking,
             autoplay: false, loop: false
         });
         //------------------------------------------------------------------------------------------
@@ -995,6 +1004,8 @@ class ShowDetail {
         }
         this.opts = {...defaults, ...opts};  
 
+        this.detail = document.querySelector('.m_detail');
+
         this.title = document.querySelector('.m_detail .m_detail-h1')
         this.brandName = document.querySelector('.m_detail .m_detail-brand-name')
         this.ceo = document.querySelector('.m_detail .m_detail-ceo_name')
@@ -1022,10 +1033,14 @@ class ShowDetail {
 
     pageShow(src){
         loader.classList.add('show')
+        gsap.set( this.detail, { y: window.innerHeight + 20, height: 800 , autoAlpha: 1 })
+        
         this.fetchPage(src)
     }
 
     contentReset(){
+        gsap.set( this.detail, { y: window.innerHeight + 20, autoAlpha: 0 })
+
         this.loadImgSrc = []
         gsap.to('.m_detail-wrap', 0, { scrollTo: 0  });
 
@@ -1103,12 +1118,8 @@ class ShowDetail {
     }
 
     closePage(){
-        gsap.to('.m_detail', .35, {y: '100%', ease: BezierEasing(0.6,0,1,1), onComplete:()=>{
+        gsap.to('.m_detail', .35, {y: window.innerHeight + 20, ease: BezierEasing(0.6,0,1,1), onComplete:()=>{
             this.contentReset();
-            isGNBShow = false;
-            bodyBlock(false);
         }})
     }
-
 }
-
