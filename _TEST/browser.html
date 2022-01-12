@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> 모바일 가변 상황 테스트 </title>
+    <style>
+        html, body{ width: 100%; height: 100%; }
+        body{ margin: 0; padding: 0;}
+        body.block{ width: 100%;  overflow: hidden; }
+
+        .wrap button{ width: 100%; height: 50px; font-size: 2rem;}
+        
+        .popup{ position: fixed; z-index: 999; left:0; right:0; top:0; bottom: 0; display: none; }
+        .popup .dim{ width: 100%; height: 100%; background-color: rgba(0,0,0,.8); opacity: 0; visibility: hidden;}
+        .popup .content{ 
+            width: 100%; height: 100%;
+            position: relative; left: 0%; top: 0; overflow: scroll;
+            background-color: rgba(0,0,0,.8);
+            transform: translate3d(0,100%,0);
+        }
+        .popup .content div {
+            width: 60%;
+            position: relative; left: 40%; top: 0; 
+            background-color: sienna;
+
+        } 
+        .popup .close{
+            position: absolute; z-index: 2;
+            bottom: 100px; left: 0;
+            width: 100%; height: 50px;
+        }
+
+        .popup.show { display: block; }
+        .popup.show .dim{ visibility: visible; opacity: 1;}
+        .popup.show .content{ 
+            animation: show-content 550ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes show-content {
+            0%{ transform: translate3d(0,100%,0);}
+            100%{ transform: translate3d(0,0,0);}
+        }
+    </style>
+    <style>
+        .print{
+            position:fixed; left:0; right:0; bottom: 0;
+            pointer-events:none; 
+            z-index: 1000;
+            font-size: 3rem;
+            color: red;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="wrap">
+        <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae dolores mollitia vero expedita culpa quo repellat corporis amet asperiores iure ad similique id, debitis eos obcaecati blanditiis est quos? Provident, iusto. Consequatur reiciendis eum, doloremque eligendi quasi itaque assumenda modi eveniet tempora cupiditate minus unde dolorum voluptatem deleniti error repellat?</h1>
+        
+        <button type="button"> Click </button>
+        
+        <h2>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae, temporibus quod ut cupiditate voluptates assumenda natus iusto veniam voluptas vitae in odit tempore recusandae nulla. Veniam repellat a consequatur dolor!</h2>
+        <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit. At maiores nemo molestias fuga quae? Vitae iste qui, placeat soluta quidem dolor officia eligendi atque tempora corporis similique aut reprehenderit, nisi cumque provident laudantium exercitationem a vel enim ea commodi neque minima tempore. Quo, facere corrupti. Culpa, quam amet aperiam sequi sit accusamus ratione quo eius pariatur omnis porro velit molestiae veniam deleniti ipsam neque nesciunt repellat quas dolor asperiores ut voluptatum nemo. Nihil optio veritatis labore laudantium autem quae officia consectetur nam aspernatur odit, totam distinctio? Facere ad eligendi iusto, animi ea natus consequuntur atque nesciunt at iste cumque blanditiis veniam sed impedit, nostrum alias tenetur est autem dolor odit voluptates ducimus labore. Nam architecto accusamus fugiat neque quisquam in perspiciatis quia reiciendis ad velit, sunt, tenetur magni. Quia ullam nisi officia. Autem explicabo laborum a tempore possimus veritatis esse facere reprehenderit cupiditate recusandae vero enim itaque eum, accusamus fuga omnis iure porro cumque expedita libero, distinctio sequi fugiat nemo ut? Officia odio ea vitae animi cupiditate nisi repudiandae, earum suscipit enim dicta exercitationem, optio repellendus impedit doloribus fugit perferendis porro dolorem! Omnis fuga ducimus perferendis aliquam laudantium, nostrum veritatis exercitationem, suscipit, debitis voluptatum unde voluptates ipsa tempore temporibus delectus labore earum alias recusandae. Quod odit illum consequuntur eos molestias, perferendis, nostrum exercitationem repellat vel quisquam commodi, enim non reprehenderit repellendus sequi quia incidunt laudantium a vitae doloremque saepe amet! Est fuga, numquam nostrum vitae asperiores quae ex optio ipsam voluptates aliquid magnam nihil accusantium doloribus corrupti sint ut aliquam quo, modi accusamus dignissimos pariatur! Modi vero repellendus atque odit reiciendis cumque dolore cupiditate iusto repudiandae mollitia. Rem, voluptatum est alias sed voluptates nam odio, aliquam quod, laboriosam tempore aut? Officiis laudantium fugiat, itaque error nisi reiciendis consequuntur qui eaque exercitationem soluta veniam iure, iste odio nulla tempora, recusandae facere?</h3>
+    </div>
+
+    <section class="popup">
+        <div class="content">
+            <div>
+                <button class="close"> close </button>
+                <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint autem, esse cumque iste aut, voluptatibus earum provident molestiae magnam, amet possimus. Minima a ullam labore, necessitatibus quasi reiciendis. Natus esse ab neque earum impedit modi, aliquam quos vitae eaque, inventore iste officia, sed voluptate? Totam dolorum dolore aliquid consequuntur voluptate! Dolorem adipisci nulla quisquam libero debitis illo quae, consectetur quasi, asperiores perspiciatis harum, laborum est impedit ut repellat quibusdam praesentium! Et officia assumenda, autem iste consequatur eius laboriosam odit minus repellendus sint harum quidem magnam quisquam maxime aliquam quas ratione nobis. Adipisci ratione earum, voluptate iure incidunt eaque, dolores obcaecati voluptatum officiis saepe quas ipsa dolor laudantium animi aliquid necessitatibus nam excepturi, error dicta? Dicta repellendus vitae distinctio blanditiis ducimus quo cupiditate recusandae quod? Enim harum provident reprehenderit, consequatur temporibus quisquam atque eveniet dignissimos expedita obcaecati tempore necessitatibus beatae sed quidem dolor, nulla ab ratione. Quia saepe reiciendis fugit? Nisi eaque cum eligendi unde laboriosam ratione perferendis pariatur? Quod reprehenderit modi atque qui at nulla dignissimos iusto, facere sunt quas obcaecati expedita porro quidem quia. Quisquam obcaecati expedita voluptas accusantium excepturi repellendus est deleniti, sequi enim illum necessitatibus quidem adipisci, dolor nisi! Asperiores consequatur beatae cupiditate est ab, omnis id incidunt aut modi at iusto minus, laboriosam harum a necessitatibus voluptatum, consectetur rem. Similique enim consequuntur animi laudantium et illum voluptatem doloremque, voluptate incidunt inventore labore dignissimos earum quas nisi praesentium quae perspiciatis, dolorum dicta omnis officiis minus officia deserunt. Earum architecto ipsum libero exercitationem praesentium maxime repellendus, autem, numquam corrupti ipsam laboriosam quod? Tenetur, vitae cumque adipisci provident mollitia dolor eum exercitationem excepturi repudiandae suscipit neque velit sed ad modi. Consequuntur assumenda eligendi nobis molestias vitae reiciendis dolorem voluptatem accusamus. Sit, totam natus ex assumenda hic laborum possimus vero nesciunt commodi aperiam sed quia esse eaque eligendi provident? Mollitia.</h1>
+                <!-- <h2>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat earum voluptatibus nobis distinctio aliquid. Nisi rerum ex sapiente, adipisci placeat harum omnis non natus libero ipsa nihil voluptate amet, ipsam exercitationem recusandae quos, quasi nobis. Sequi ea quis, facere et modi nisi neque velit est saepe impedit quisquam ad quidem, officiis eligendi, sit sint quas? Deleniti magnam pariatur sequi, ducimus cumque quam libero asperiores aut illo nulla provident voluptatem enim minus ipsam molestiae obcaecati, ipsa nobis dolores quis facere id officiis necessitatibus voluptatum! Praesentium officiis voluptatum culpa ex ut repellendus nostrum in quos veniam quia sint exercitationem mollitia laboriosam, nesciunt quod amet eaque eum odio debitis vero suscipit iusto! Nostrum quia at ratione esse sapiente ipsam sed commodi, quo assumenda qui unde aut iure sint voluptatem enim iusto explicabo. Eius eligendi beatae hic nisi aperiam modi quae magnam magni qui mollitia impedit, perspiciatis provident quam ipsa consequatur delectus, asperiores optio pariatur illo officiis dolor aspernatur! Vitae mollitia error amet et voluptatem? Exercitationem incidunt hic est excepturi vel neque facere voluptas magnam. Eligendi nostrum quia dolor quos cum unde vitae expedita amet, molestiae ipsum. Delectus accusamus aspernatur, tempora atque, quae porro quasi libero dolores itaque quos aut distinctio vel enim! Error nisi tempore iusto omnis consequuntur, rem expedita inventore. Molestiae tenetur adipisci tempora placeat nulla voluptas excepturi quas recusandae ab ea commodi atque cum blanditiis, asperiores ratione ipsum amet, animi unde, similique nam deleniti. Modi ullam atque fugiat dicta sed nemo autem maiores omnis laborum iste cum, quis vel officiis quam eos recusandae tenetur provident laudantium explicabo. Omnis, vel et? Reiciendis repudiandae a debitis cumque ea sed hic voluptate fugiat. Facilis temporibus quo accusantium illo, non laborum debitis amet exercitationem minima corporis in culpa? Repellat, dignissimos placeat adipisci expedita neque, et sequi ipsam minus impedit commodi cum dolorem odit, laboriosam officia.</h2> -->
+            </div>
+        </div>
+        <!-- <div class="dim"></div> -->
+    </section>
+
+    <div class='print'> </div>
+
+    <script type="text/javascript">
+        let scrollY;
+        document.querySelector('.wrap button').addEventListener('click', e=>{
+            // print(`${window.innerHeight}, ${window.pageYOffset} `)
+            document.querySelector('.popup').classList.add('show');
+            scrollY = window.pageYOffset
+            document.body.classList.add('block');
+            document.body.style.top = `-${scrollY}px`
+        });
+        document.querySelector('.popup button').addEventListener('click', e=>{
+            document.querySelector('.popup').classList.remove('show');
+            document.body.classList.remove('block')
+            document.body.style.removeProperty('top');
+            window.scrollTo(0, scrollY);
+        })
+
+        function print( _print ){
+            document.querySelector('.print').innerHTML = _print
+        };
+
+        window.addEventListener('scroll', e =>{
+            print(`${window.innerHeight}, ${window.pageYOffset} `)
+        })
+        document.querySelector('.popup .content').addEventListener('scroll', e =>{
+            print(`${window.innerHeight}, ${window.pageYOffset} `)
+        })
+    </script>
+    
+</body>
+</html>

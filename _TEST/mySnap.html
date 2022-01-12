@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> mySnap </title>
+<style>
+    body{ margin: 0; padding: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh;}
+
+    .container{ 
+        position: relative; width: calc(100% - 30px);
+    }
+
+    .container.lottie-class{
+        position: relative; 
+        border: 1px solid #e5e5e5; border-radius: 4px; box-sizing: border-box;
+        display: flex; justify-content: center; align-items: center;
+        background-color: #fff;
+        transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .container.lottie-class.change-color{
+        background-color: #000;
+    }
+
+    #my_snap{ 
+        width: 345px; height: 50px; 
+        /* background-color: sienna; */
+    }
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <svg width="55" height="19" viewBox="0 0 55 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path 
+            fill-rule="evenodd" c
+            lip-rule="evenodd" d="M50.2548 0.00875341C51.6844 0.00875341 52.8289 0.637325 53.6883 1.89319C54.5626 3.16667 55 4.84907 55 6.94053C55 8.94846 54.5551 10.5735 53.6653 11.8132C52.7526 13.0692 51.6159 13.6976 50.2545 13.6976C49.4863 13.6976 48.8096 13.5118 48.2238 13.1389C47.6865 12.8181 47.1966 12.3349 46.7529 11.6937V18.7687H41.1177V13.2386L43.5555 4.71007L41.1177 5.7332V0.417914H46.5928V2.11654C47.087 1.40561 47.6387 0.881757 48.2471 0.542564C48.8477 0.187154 49.5169 0.00875341 50.2548 0.00875341ZM6.50417 3.57344e-06C7.42073 -0.000572057 8.22528 0.0683549 9.06233 0.23714C9.83757 0.393762 10.9662 0.770603 11.7104 1.0974L10.6382 4.85006C10.1303 4.48446 9.43343 4.14307 8.95661 3.94833C8.34646 3.69903 7.79108 3.56512 7.41849 3.54658C7.16868 3.53419 6.95211 3.55886 6.78734 3.67968C6.62354 3.79993 6.54584 3.96478 6.56396 4.21223C6.58773 4.53624 6.84394 4.6858 7.51974 4.84253C7.77073 4.9008 8.15195 4.9812 8.58817 5.09148C10.1955 5.49821 10.7264 5.95672 11.2266 6.54567C11.3374 6.67611 11.5453 7.03268 11.6192 7.21838C11.8341 7.75856 11.9083 8.20214 11.9086 8.84241C11.9094 10.2817 11.3213 11.4546 10.1445 12.3609C8.96748 13.2675 7.41199 13.7215 5.47783 13.7228C4.42645 13.7235 3.39628 13.6064 2.387 13.3713C1.58011 13.1834 0.761705 12.8451 0 12.4895L1.21945 8.22935C1.7177 8.63365 2.40213 9.03054 2.87363 9.23975C3.47718 9.50747 4.02892 9.6583 4.40088 9.68818C4.65016 9.70834 4.86736 9.69027 5.03511 9.57443C5.20201 9.45916 5.28397 9.29686 5.27214 9.04895C5.25679 8.72436 5.01028 8.53866 4.33309 8.38969C4.1048 8.3401 3.72966 8.24245 3.29834 8.11108C2.33009 7.81625 1.50454 7.29947 0.998624 6.71631C0.724296 6.40041 0.534589 5.96924 0.417781 5.48837C0.364599 5.19354 0.33838 4.88737 0.338167 4.58246C0.337421 3.23438 0.878512 2.08069 2.01771 1.22784C3.1567 0.375227 4.67073 0.00128145 6.50417 3.57344e-06ZM31.3196 0.00875341C32.0571 0.00875341 32.7188 0.17835 33.3042 0.517658C33.9049 0.881757 34.4603 1.41429 34.9697 2.11654V0.417914H40.4565L38.0188 8.94649L40.4565 7.92335V13.2386H35.1751V11.3044C34.5893 12.1562 33.9924 12.7673 33.3843 13.1389C32.7377 13.528 32.0496 13.7226 31.3196 13.7226C29.9582 13.7226 28.8214 13.0853 27.9089 11.8132C27.4678 11.2096 27.133 10.4924 26.9049 9.66183C26.6769 8.83123 26.5627 7.92335 26.5627 6.94053C26.5627 4.84907 27.0036 3.17536 27.886 1.91822C28.7529 0.646129 29.8974 0.00875341 31.3196 0.00875341ZM21.8144 0.00878877C23.0766 0.00878877 24.0731 0.422815 24.8031 1.24844C25.5332 2.10893 25.898 3.23644 25.898 4.63329V13.2387H20.172L20.1719 6.71023C20.1711 6.14162 20.1562 5.80383 20.025 5.52495C19.9131 5.28724 19.6863 5.1166 19.3504 5.09215C19.009 5.06736 18.6959 5.19073 18.5287 5.47143C18.3537 5.78571 18.3238 6.24585 18.3238 6.76599V13.2387H12.5748V0.417832H18.141V2.1913C18.6279 1.46414 19.1714 0.914228 19.7726 0.5426C20.3808 0.187189 21.0615 0.00878877 21.8144 0.00878877ZM33.5211 4.88557C32.6503 4.88557 32.0496 5.66381 32.0496 6.77279C32.0496 7.88176 32.6503 8.66001 33.5211 8.66001C34.3921 8.66001 34.9926 7.88176 34.9926 6.77279C34.9926 5.66381 34.3921 4.88557 33.5211 4.88557ZM48.0589 4.88557C47.188 4.88557 46.5874 5.66381 46.5874 6.77279C46.5874 7.88176 47.188 8.66001 48.0589 8.66001C48.9298 8.66001 49.5305 7.88176 49.5305 6.77279C49.5305 5.66381 48.9298 4.88557 48.0589 4.88557Z" 
+            fill="url(#logo-gradient)"/>
+            <defs>
+                <linearGradient id="logo-gradient" x1="0%" y1="50%" x2="100%" y2="50%" > 
+                    <stop offset="0%" stop-color="#8C73C3">
+                        <animate attributeName="stop-color" values="#8C73C3; #2DB996; #4182D2; #8C73C3" dur="3.2s" repeatCount="indefinite"></animate>
+                    </stop>
+                    <stop offset="50%" stop-color="#4182D2">
+                        <animate attributeName="stop-color" values="#4182D2; #8C73C3; #2DB996; #4182D2" dur="3.2s" repeatCount="indefinite"></animate>
+                    </stop>
+                    <stop offset="100%" stop-color="#2DB996">
+                        <animate attributeName="stop-color" values="#2DB996; #4182D2; #8C73C3; #2DB996" dur="3.2s" repeatCount="indefinite"></animate>
+                    </stop>
+                </linearGradient> 
+            </defs>
+        </svg>
+    </div>   
+    
+    
+    <div class="container lottie-class">
+        <div id="my_snap"></div>
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.8.1/lottie_svg.min.js"></script>
+<script type="text/javascript">
+    const lottieClass = document.querySelector('.lottie-class');
+
+    const my_snap = lottie.loadAnimation({
+        container: document.querySelector('#my_snap'),
+        loop: false, autoplay: true, renderer: 'svg',
+        path: "my_snap.json"
+    });
+
+    /*
+    ~ 29     : 흰색
+    30 ~ 165 : 검정
+    166 ~ 249 : 흰색
+    250 ~ 384 : 검정
+    385 ~     : 흰색
+    */
+    my_snap.onEnterFrame = () =>{
+        if( my_snap.currentFrame >= 30 && my_snap.currentFrame < 166){ 
+            if( !lottieClass.classList.contains('change-color') ) lottieClass.classList.add('change-color')
+        }
+        else if( my_snap.currentFrame >= 166 && my_snap.currentFrame < 250){
+            if( lottieClass.classList.contains('change-color') ) lottieClass.classList.remove('change-color')
+        }
+        else if( my_snap.currentFrame >= 250 && my_snap.currentFrame < 385){
+            if( !lottieClass.classList.contains('change-color') ) lottieClass.classList.add('change-color')
+        } 
+        else {
+            if( lottieClass.classList.contains('change-color') ) lottieClass.classList.remove('change-color')
+        }
+    }
+
+
+</script>
+</html>

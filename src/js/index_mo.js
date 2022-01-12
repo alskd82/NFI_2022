@@ -59,7 +59,9 @@ const btn_ham = document.querySelector('.m_ham');
 let isRefresh = false;
 let loader;
 let Detail;
-
+const scrollType = 'window' // 'element'; // 'window'
+let scrollY = (scrollType === 'window') ? window.pageYOffset : document.querySelector('.m_page-wrap').scrollTop;
+const scrollTriggerScroller = (scrollType === 'window') ? window : '.m_page-wrap';
 
 document.addEventListener('DOMContentLoaded', e =>{
 
@@ -93,10 +95,6 @@ document.addEventListener('DOMContentLoaded', e =>{
             }) 
             
         };
-        // if(billboardImageLoadedNum === Section_Billboard.imgUrl.length){
-        //     Loading.play()
-        //     Section_Billboard.play()
-        // }
     })
 })
 
@@ -107,13 +105,13 @@ window.addEventListener('load', (e)=>{
 
     Detail = new ShowDetail();
     Detail.init()
-    
 })
 
 function addEvent(){
     /* 스크롤 */
     scroll_Fn();
-    document.addEventListener('scroll', scroll_Fn, false)
+    if(scrollType === 'window') document.addEventListener('scroll', scroll_Fn, false)
+    else                        document.querySelector('.m_page-wrap').addEventListener('scroll', scroll_Fn, false)
 
     /* GNB */
     GNB.init();
@@ -137,14 +135,15 @@ function addEvent(){
             e.preventDefault();
             let href;
             if(window.location.href.indexOf("webflow") != -1 || window.location.href.indexOf("nextfashion") != -1){
-                href = item.getAttribute('href');
+                href = link.getAttribute('href');
             } else {
                 href = './winner'
             }
             Detail.pageShow(href);
-            // gsap.set('#DetailContent > .m_detail-wrap', {height: window.innerHeight, autoAlpha: 1});
             isGNBShow = true;
-            bodyBlock(true);
+            _bodyScrollY = window.pageYOffset;
+            body.classList.add('detail-show')
+            // bodyBlock(true);
         })
     })
 
@@ -152,9 +151,10 @@ function addEvent(){
     document.querySelector('.m_detail-gnb a').addEventListener('click' , e =>{
         Detail.closePage();
         isGNBShow = false;
-        bodyBlock(false);
+        window.scrollTo(0, _bodyScrollY);
+        body.classList.remove('detail-show')
+        // bodyBlock(false);
     })
-
 
     /* 로고 이동 */
     document.querySelector('.m_logo-wrap').addEventListener('click', e =>{
@@ -167,27 +167,69 @@ function addEvent(){
 
     /* 스크롤 다운 */
     document.querySelector('.scroll-arrow-wrap').addEventListener('click', e =>{
-        gsap.to(window, .7, {scrollTo: {y: ".m_section-banner", offsetY: gsap.getProperty('nav', 'height')}, ease: BezierEasing(0.4,0,0.2,1)})
+        gsap.to(scrollTriggerScroller, .7, {
+            scrollTo: {y: ".m_section-banner", offsetY: gsap.getProperty('nav', 'height')}, 
+            ease: BezierEasing(0.4,0,0.2,1)
+        })
     })
 }
 
-
-let scrollY = window.pageYOffset;
+let _bodyScrollY = window.pageYOffset;
 function bodyBlock(isBlock){
+    if(scrollType != 'window') return;
     if(isBlock){
-        scrollY = window.pageYOffset;
+        _bodyScrollY = window.pageYOffset;
         body.style.overflow = 'hidden';
         body.style.position = 'fixed';
-        body.style.top = `-${scrollY}px`;
+        body.style.top = `-${_bodyScrollY}px`;
         body.style.width = '100%';
+        
     } else {
         body.style.removeProperty('overflow');
         body.style.removeProperty('position');
         body.style.removeProperty('top');
         body.style.removeProperty('width');
-        window.scrollTo(0, scrollY);
+        window.scrollTo(0, _bodyScrollY);
+        
     }
 }
+
+/* ====================================================================================================================*/
+/* scroll */
+function scroll_Fn(e){
+    scrollY = (scrollType === 'window') ? window.pageYOffset : document.querySelector('.m_page-wrap').scrollTop
+    
+    const _s = Math.floor(100*vh) *.25
+    const _e = Math.floor(100*vh) *.75
+    const _opa = modulate(scrollY, [_s,_e], [1,0], true).toFixed(2)
+    gsap.set(billboard, {autoAlpha: _opa})
+
+    if(!isGNBShow){
+        if(scrollY > _e){
+            if(!document.querySelector('.m_gnb-wrap').classList.contains('bg-black')) document.querySelector('.m_gnb-wrap').classList.add('bg-black')
+        } else {
+            if(document.querySelector('.m_gnb-wrap').classList.contains('bg-black')) document.querySelector('.m_gnb-wrap').classList.remove('bg-black')
+        }
+
+        /* 플로팅 위치 */
+        if(scrollY > 88){
+            if(!document.querySelector('.m_float-wrap').classList.contains('pb-change')){
+                document.querySelector('.m_float-wrap').classList.add('pb-change')
+                document.querySelector('.scroll-arrow-wrap').classList.add('hide')
+            }
+        } else {
+            if(document.querySelector('.m_float-wrap').classList.contains('pb-change')){
+                document.querySelector('.m_float-wrap').classList.remove('pb-change')
+                document.querySelector('.scroll-arrow-wrap').classList.remove('hide')
+            }
+        }
+    };
+
+    console.log(scrollY)
+
+    // if(document.body.classList.contains('loaded')) print(gsap.getProperty('.m_detail', 'height'))
+}
+
 
 /* ====================================================================================================================*/
 // /* LoadWrap */
@@ -227,8 +269,9 @@ const Loading = (function(exports){
                 onComplete: () => {
                     elem.style.backgroundColor = 'rgba(0,0,0,0)';
                     elem.querySelectorAll('div').forEach(elem => elem.remove());
-                    if(window.pageYOffset > 0){
-                        window.scrollTo(0,0)
+                    if(scrollY > 0){
+                        if(scrollType === 'window') window.scrollTo(0,0)
+                        else                        gsap.to('.m_page-wrap', {duration: 0, scrollTo: {y: 0} });
                         setTimeout(()=>{ isRefresh = false;}, 100)
                     }
                 }
@@ -246,8 +289,6 @@ const Loading = (function(exports){
     exports = { init, play, overlay_play  }
     return exports;
 })({});
-
-
 
 
 /* ====================================================================================================================*/
@@ -270,6 +311,7 @@ const Floating = (function(exports){
     function ST(){
         ScrollTrigger.create({
             // markers: true, 
+            scroller: scrollTriggerScroller,
             trigger: '.m_section-banner',
             start: "bottom bottom",
             onEnter:()=> floatingColor_Fn(true),
@@ -280,7 +322,6 @@ const Floating = (function(exports){
     exports.init = init;
     return exports;
 })({})
-
 
 /* ====================================================================================================================*/
 /* 섹션 : 빌보드 */
@@ -351,7 +392,7 @@ const Section_Billboard = (function(exports){
 })({});
 
 /* ====================================================================================================================*/
-/* 네비게이션 */
+/* GNB 네비게이션 */
 let isGNBShow = false;
 const GNB = (function(exports){
     function init(){
@@ -403,9 +444,7 @@ const GNB = (function(exports){
                 if( targetSections[i] === ".m_section-supporters") _offset = 20
                 else if( targetSections[i] === ".m_section-benefit") _offset = -20
                 else if( targetSections[i] === ".m_section-winner") _offset = 30
-                gsap.to(window, 0, { scrollTo:{ y: targetSections[i] , offsetY: _offset-5} });
-
-                
+                gsap.to(scrollTriggerScroller, 0, { scrollTo:{ y: targetSections[i] , offsetY: _offset-5} });
             })
         })
     }
@@ -448,40 +487,6 @@ const GNB = (function(exports){
     }
     return exports;
 })({});
-
-/* ====================================================================================================================*/
-/* scroll */
-function scroll_Fn(e){
-    const _scrollY = Math.floor(window.pageYOffset)
-    const _s = Math.floor(100*vh) *.25
-    const _e = Math.floor(100*vh) *.75
-    const _opa = modulate(_scrollY, [_s,_e], [1,0], true).toFixed(2)
-    gsap.set(billboard, {autoAlpha: _opa})
-
-    if(!isGNBShow){
-        if(_scrollY > _e){
-            if(!document.querySelector('.m_gnb-wrap').classList.contains('bg-black')) document.querySelector('.m_gnb-wrap').classList.add('bg-black')
-        } else {
-            if(document.querySelector('.m_gnb-wrap').classList.contains('bg-black')) document.querySelector('.m_gnb-wrap').classList.remove('bg-black')
-        }
-
-        /* 플로팅 위치 */
-        if(_scrollY > 88){
-            if(!document.querySelector('.m_float-wrap').classList.contains('pb-change')){
-                document.querySelector('.m_float-wrap').classList.add('pb-change')
-                document.querySelector('.scroll-arrow-wrap').classList.add('hide')
-            }
-        } else {
-            if(document.querySelector('.m_float-wrap').classList.contains('pb-change')){
-                document.querySelector('.m_float-wrap').classList.remove('pb-change')
-                document.querySelector('.scroll-arrow-wrap').classList.remove('hide')
-            }
-        }
-    };
-
-    // if(document.body.classList.contains('loaded')) print(gsap.getProperty('.m_detail', 'height'))
-}
-
 
 /* ====================================================================================================================*/
 /* ClipMaskImg */
@@ -624,6 +629,7 @@ const Section_Desc = (function(exports){
     function ST(){
         ScrollTrigger.create({
             // markers: true, 
+            scroller: scrollTriggerScroller,
             trigger: '.m_desc_img-wrap',
             start: "top bottom",
             onEnter:()=>{
@@ -644,6 +650,7 @@ const Section_Desc = (function(exports){
 
         ScrollTrigger.create({
             // markers: true, 
+            scroller: scrollTriggerScroller,
             trigger: '.m_desc_info-wrap',
             start: "top 95%",
             onEnter:()=>{
@@ -691,6 +698,7 @@ const Secction_Apply = (function(exports){
     function ST(){
         ScrollTrigger.create({
             // markers: true, 
+            scroller: scrollTriggerScroller,
             trigger: '.m_section-apply',
             start: `top 90%`, 
             onEnter:()=>{
@@ -756,6 +764,7 @@ const Secction_LYB = (function(exports){
     function ST(){
         let opts = {
             // markers: true, 
+            scroller: scrollTriggerScroller,
             start: `top 95%`, 
             // onLeaveBack:()=>{
             //     if(isRefresh)reset()
@@ -808,6 +817,7 @@ const Section_Step = (function(exports){
     function ST(){
         stepArr.forEach((item, i)=>{
             ScrollTrigger.create({
+                scroller: scrollTriggerScroller,
                 trigger: stepArr[i],
                 start: `top 75%`, 
                 onEnter:()=>{
@@ -837,6 +847,7 @@ const Section_Next = (function(exports){
         
         ScrollTrigger.create({
             // markers: true, 
+            scroller: scrollTriggerScroller,
             trigger: '.m_section-next-fashion',
             animation: ani,
             scrub: true
@@ -853,6 +864,7 @@ const Section_Next = (function(exports){
 
         ScrollTrigger.create({
             // markers: true,
+            scroller: scrollTriggerScroller,
             id: 'textMotion', 
             start: "top 80%",
             trigger: '.m_section-next-fashion',
@@ -887,6 +899,7 @@ const Section_List = (function(exports){
         for(let i=0; i<rowTotalNum; i++){
             ScrollTrigger.create({
                 // markers: true, 
+                scroller: scrollTriggerScroller,
                 trigger: listMaskArr[i*rowTotalNum],
                 start: `center 95%`,
                 onEnter:()=>{
@@ -934,6 +947,7 @@ const FAQ = new Swiper(".m_faq-wrap", {slidesPerView: "auto",});
 // /* 문의하기 */
 const Section_Contact = (function(exports){
     let plane;
+    let interval = null;
     function init(){
         plane = lottie.loadAnimation({
             container: document.querySelector('.m_section-contact .m_inner'),
@@ -950,6 +964,8 @@ const Section_Contact = (function(exports){
                 onComplete:()=>{
                     plane.goToAndStop(1, false)
                     gsap.set('.m_inner', { opacity: 0 } )
+                    clearInterval(interval)
+                    interval = null
                 } 
             });
         };
@@ -980,16 +996,20 @@ const Section_Contact = (function(exports){
         plane.play()
     }
 
-    
-
     function fromReset(){
         $('#email-form').css('display', "block");
+        interval = setInterval(() => {
+            $('#email-form').css('display', "block");
+            console.log('interval')
+        }, 60/1000);
         $('.m_contact_submit_finish').css("pointer-events" , "none");
 
         $('#email-form input[type=email]').val('');
         $('#email-form input[type=text]').val('');
         $('#email-form #Content-2').val('');
     }
+
+    
 
 
     exports.init = init;
@@ -1033,13 +1053,12 @@ class ShowDetail {
 
     pageShow(src){
         loader.classList.add('show')
-        gsap.set( this.detail, { y: window.innerHeight + 20, height: 800 , autoAlpha: 1 })
-        
+        gsap.set( this.detail, { autoAlpha: 1 })
         this.fetchPage(src)
     }
 
     contentReset(){
-        gsap.set( this.detail, { y: window.innerHeight + 20, autoAlpha: 0 })
+        gsap.set( this.detail, { y: window.innerHeight + 100, autoAlpha: 0 })
 
         this.loadImgSrc = []
         gsap.to('.m_detail-wrap', 0, { scrollTo: 0  });
@@ -1089,36 +1108,30 @@ class ShowDetail {
             this.after.innerText = doc.querySelector('#RichAfter').innerText;
 
             // 갤러리 이미지 //
-            let gUrl = []
+            this.gUrl = []
             doc.querySelectorAll('.winner_g-thumb').forEach((item, i)=>{
-                gUrl.push( item.style.backgroundImage );
+                this.gUrl.push( item.style.backgroundImage );
             })
-            this.gallery.style.overflowX = 'scroll'
-            gUrl.forEach((imgUrl, i)=>{
+            // this.gallery.style.overflowX = 'scroll'
+            this.gUrl.forEach((imgUrl, i)=>{
                 this.gallery.innerHTML += `<div class="m_detail-gallery_img"></div>`;
-                document.querySelector(`.m_detail-gallery_img:nth-child(${i+1})`).style.backgroundImage = imgUrl
+                document.querySelector(`.m_detail-gallery_img:nth-child(${i+1})`).style.backgroundImage = imgUrl;
             });
+            this.gallery.innerHTML += `<div class="m_detail-gallery_img" style="width:20px; background: rgba(0,0,0,0)"></div>`;
 
             this.imageload()
         })
     }
 
-    imageload(){ 
-        let imgCount = 0;
-        let imgLoad = imagesLoaded("#DetailContent", {background: ".m_detail-gallery_img"} );
-        imgLoad.on('progress', (intance, image)=>{
-            imgCount++;
-            if(imgCount === imgLoad.images.length){
-                console.log('billboard images loaded');
-                // 등장 //
-                gsap.to('.m_detail', .55, {y: '0%', ease: 'Quint.easeOut', onComplete:()=> loader.classList.remove('show') })
-            }
-        })
-    
+    imageload(){        
+        const mainImgLoad = imagesLoaded(this.mainImg, {background: true });
+        mainImgLoad.on('always', (intance)=>{
+            gsap.to(this.detail, .6, {delay: .1, y: '0%', ease: BezierEasing(0.33,0.45,0,1), onComplete:()=> loader.classList.remove('show') })
+        });
     }
 
     closePage(){
-        gsap.to('.m_detail', .35, {y: window.innerHeight + 20, ease: BezierEasing(0.6,0,1,1), onComplete:()=>{
+        gsap.to('.m_detail', .4, {y: window.innerHeight + 20, ease: BezierEasing(0.6,0,1,1), onComplete:()=>{
             this.contentReset();
         }})
     }
