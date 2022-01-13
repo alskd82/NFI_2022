@@ -20,6 +20,10 @@ img { vertical-align: top; }
 .m_float-download .ic-download.mode-fill span{ color: black;}
 .m_float-download .ic-download.mode-fill { background: #BDFF00;}
 
+.m_float-download .ic-download.mode-fill.white path{ stroke: black;}
+.m_float-download .ic-download.mode-fill.white span{ color: black;}
+.m_float-download .ic-download.mode-fill.white { background: white;}
+
 .m_float-wrap{ transition: .2s cubic-bezier(0.33,0.45,0,1);}
 .m_float-wrap.pb-change{ padding-bottom: 24px; }
 

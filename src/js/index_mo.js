@@ -225,7 +225,7 @@ function scroll_Fn(e){
         }
     };
 
-    console.log(scrollY)
+    // console.log(scrollY)
 
     // if(document.body.classList.contains('loaded')) print(gsap.getProperty('.m_detail', 'height'))
 }
@@ -300,11 +300,17 @@ const Floating = (function(exports){
     }
     
     /* 참가 신청서 색상 바꾸기 */
-    function floatingColor_Fn(isChange){ 
+    function floatingColor_Fn(isChange , isWhite){ 
         if(!isGNBShow){
-            const _b = floatingDownload.classList.contains('mode-fill');
-            if(isChange && !_b) floatingDownload.classList.add('mode-fill')
-            else if(!isChange && _b) floatingDownload.classList.remove('mode-fill')
+            if(isWhite != undefined){
+                const _a = floatingDownload.classList.contains('white');
+                if(isWhite && !_a) floatingDownload.classList.add('white')
+                else if(!isWhite && _a) floatingDownload.classList.remove('white')
+            } else {
+                const _b = floatingDownload.classList.contains('mode-fill');
+                if(isChange && !_b) floatingDownload.classList.add('mode-fill')
+                else if(!isChange && _b) floatingDownload.classList.remove('mode-fill')
+            }
         }
     }
 
@@ -314,8 +320,20 @@ const Floating = (function(exports){
             scroller: scrollTriggerScroller,
             trigger: '.m_section-banner',
             start: "bottom bottom",
-            onEnter:()=> floatingColor_Fn(true),
+            onEnter:()=>  floatingColor_Fn(true),
             onLeaveBack:()=> floatingColor_Fn(false)
+        });
+
+        ScrollTrigger.create({
+            // markers: true, 
+            scroller: scrollTriggerScroller,
+            trigger: '.m_benefit_txt-wrap',
+            start: `top ${window.innerHeight - 24 - 42}px`,
+            end: `bottom ${window.innerHeight - 24}px`,
+            onEnter:()=>  floatingColor_Fn(true, true),
+            onEnterBack:() => floatingColor_Fn(true, true),
+            onLeave:() => floatingColor_Fn(true, false),
+            onLeaveBack:()=> floatingColor_Fn(true,false)
         });
     }
 
@@ -1031,6 +1049,7 @@ class ShowDetail {
         this.ceo = document.querySelector('.m_detail .m_detail-ceo_name')
 
         this.brandLink = document.querySelector("#Detail_Url_Brand");
+        this._29Link = document.querySelector("#Detail_Url_29");
         this.instaLink = document.querySelector("#Detail_Url_Insta");
         this.shopLink = document.querySelector("#Detail_Url_Shop");
 
@@ -1084,11 +1103,14 @@ class ShowDetail {
 
             // 링크 //
             const brandLink = doc.querySelector('#goToBrand') ? doc.querySelector('#goToBrand').getAttribute('href') : undefined;
+            const _29Link = doc.querySelector('#goToBrand') ? doc.querySelector('#goTo29').getAttribute('href') : undefined;
             const instaLink = doc.querySelector('#goToInsta') ? doc.querySelector('#goToInsta').getAttribute('href') : undefined;
             const shopLink = doc.querySelector('#goToShop') ? doc.querySelector('#goToShop').getAttribute('href') : undefined;
 
             if(brandLink != undefined)  this.brandLink.setAttribute('href', brandLink)
             else                        this.brandLink.style.display = 'none'
+            if(_29Link != undefined)  this._29Link.setAttribute('href', _29Link)
+            else                       this._29Link.style.display = 'none'
             if(instaLink != undefined)  this.instaLink.setAttribute('href', instaLink)
             else                        this.instaLink.style.display = 'none'
             if(shopLink != undefined)  this.shopLink.setAttribute('href', instaLink)
